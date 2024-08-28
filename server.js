@@ -1,12 +1,18 @@
 const express = require('express');
+const cors = require('cors');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Enable CORS for all origins (you can restrict this to specific origins if needed)
+app.use(cors());
+
 
 // Middleware to parse JSON data
 app.use(bodyParser.json());
