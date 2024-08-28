@@ -1,10 +1,19 @@
+const express = require('express');
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-// Path to the image file
-const imagePath = path.join(__dirname, 'kalaburgitech.jpg');
-const userDataPath = path.join(__dirname, 'user.json');
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Middleware to parse JSON data
+app.use(bodyParser.json());
+
+// Correct local path to the image file using path.resolve()
+const imagePath = path.resolve(__dirname, 'kalburagitech.jpg');
+const userDataPath = path.resolve(__dirname, 'user.json');
 
 // Email sending service with attachment
 const sendEmail = (emailRequest) => {
@@ -33,9 +42,9 @@ const sendEmail = (emailRequest) => {
               `Best regards,\nKalaburagi Tech`,
         attachments: [
             {
-                filename: 'kalaburgitech.jpg',
+                filename: 'kalburagitech.jpg',
                 path: imagePath,
-                cid: 'kalaburgitech@cid'
+                cid: 'kalburagitech@cid' // For embedding the image, if needed
             }
         ]
     };
@@ -63,4 +72,9 @@ app.post('/api/email-send', async (req, res) => {
         console.error('Error sending email:', error);
         res.status(500).send('Error sending email');
     } 
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
