@@ -1,20 +1,12 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+const nodemailer = require('nodemailer');
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Middleware to parse JSON data
-app.use(bodyParser.json());
-
-// Path to the JSON file where user data will be saved
+// Path to the image file
+const imagePath = path.join(__dirname, 'kalaburgitech.jpg');
 const userDataPath = path.join(__dirname, 'user.json');
 
-// Email sending service
+// Email sending service with attachment
 const sendEmail = (emailRequest) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -27,14 +19,31 @@ const sendEmail = (emailRequest) => {
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: emailRequest.email,
-        subject: 'Project Submission Details',
-        text: `Name: ${emailRequest.username}\nEmail: ${emailRequest.email}\nPhone: ${emailRequest.phone}\nWhatsApp: ${emailRequest.whatsapp}\nProject Name: ${emailRequest.projectName}\nProgramming Language: ${emailRequest.language}\nDescription: ${emailRequest.description}`
+        subject: 'Welcome to Kalaburagi Tech - Project Submission Details',
+        text: `Hello ${emailRequest.username},\n\nWelcome to Kalaburagi Tech!\n\n` +
+              `Thank you for submitting your project. Here are the details:\n\n` +
+              `Name: ${emailRequest.username}\n` +
+              `Email: ${emailRequest.email}\n` +
+              `Phone: ${emailRequest.phone}\n` +
+              `WhatsApp: ${emailRequest.whatsapp}\n` +
+              `Project Name: ${emailRequest.projectName}\n` +
+              `Programming Language: ${emailRequest.language}\n` +
+              `Description: ${emailRequest.description}\n\n` +
+              `If you have any questions or need further assistance, feel free to contact us at 9880020224.\n\n` +
+              `Best regards,\nKalaburagi Tech`,
+        attachments: [
+            {
+                filename: 'kalaburgitech.jpg',
+                path: imagePath,
+                cid: 'kalaburgitech@cid'
+            }
+        ]
     };
 
     return transporter.sendMail(mailOptions);
 };
 
-// Route to handle email sending and save data to user.json
+// Route to handle email sending and save user data
 app.post('/api/email-send', async (req, res) => {
     try {
         const emailRequest = req.body;
@@ -53,21 +62,5 @@ app.post('/api/email-send', async (req, res) => {
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).send('Error sending email');
-    }
-});
-
-// Route to get saved user data
-app.get('/api/users', (req, res) => {
-    fs.readFile(userDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading user data:', err);
-            return res.status(500).send('Error reading user data');
-        }
-        res.status(200).json(JSON.parse(data));
-    });
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    } 
 });
