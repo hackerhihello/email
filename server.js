@@ -74,6 +74,17 @@ app.post('/api/email-send', async (req, res) => {
     } 
 });
 
+// Route to get saved user data
+app.get('/api/users', (req, res) => {
+    fs.readFile(userDataPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading user data:', err);
+            return res.status(500).send('Error reading user data');
+        }
+        res.status(200).json(JSON.parse(data));
+    });
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
