@@ -28,25 +28,18 @@ const sendEmail = (emailRequest) => {
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: emailRequest.email,
-        subject: 'Welcome to Kalaburagi Tech - Project Submission Details',
-        text: `Hello ${emailRequest.username},\n\nWelcome to Kalaburagi Tech!\n\n` +
-              `Thank you for submitting your project. Here are the details:\n\n` +
-              `Name: ${emailRequest.username}\n` +
-              `Email: ${emailRequest.email}\n` +
-              `Phone: ${emailRequest.phone}\n` +
-              `WhatsApp: ${emailRequest.whatsapp}\n` +
-              `Project Name: ${emailRequest.projectName}\n` +
-              `Programming Language: ${emailRequest.language}\n` +
-              `Description: ${emailRequest.description}\n\n` +
-              `If you have any questions or need further assistance, feel free to contact us at 9880020224.\n\n` +
-              `Best regards,\nKalaburagi Tech`,
-        attachments: [
-            {
-                filename: 'kalburagitech.jpg',
-                path: imagePath,
-                cid: 'kalburagitech@cid' // For embedding the image, if needed
-            }
-        ]
+        subject: 'Project Submission Details',
+        text: `Name: ${emailRequest.username}\nEmail: ${emailRequest.email}\nPhone: ${emailRequest.phone}\nWhatsApp: ${emailRequest.whatsapp}\nProject Name: ${emailRequest.projectName}\nProgramming Language: ${emailRequest.language}\nDescription: ${emailRequest.description}\n\nWelcome to Kalaburagi Tech! If you have any queries, contact us at 9880020224.`,
+        html: `<p>Name: ${emailRequest.username}</p>
+               <p>Email: ${emailRequest.email}</p>
+               <p>Phone: ${emailRequest.phone}</p>
+               <p>WhatsApp: ${emailRequest.whatsapp}</p>
+               <p>Project Name: ${emailRequest.projectName}</p>
+               <p>Programming Language: ${emailRequest.language}</p>
+               <p>Description: ${emailRequest.description}</p>
+               <p><strong>Welcome to Kalaburagi Tech!</strong></p>
+               <p>If you have any queries, contact us at 9880020224.</p>
+               <img src="https://raw.githubusercontent.com/hackerhihello/email/main/kalaburagitech.jpeg" alt="Kalaburagi Tech">`
     };
 
     return transporter.sendMail(mailOptions);
